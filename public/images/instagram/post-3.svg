@@ -1,0 +1,5 @@
+<svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="600" fill="#faf6ee"/>
+  <path d="M80 450C130 340 250 250 350 280C450 310 500 380 530 470" stroke="#477742" stroke-width="40"/>
+  <text x="120" y="530" fill="#1c3020" font-family="Arial, sans-serif" font-size="42" font-weight="700">Public Health</text>
+</svg>

@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-start: #f7f1e4;
+  --background-end: #efe5d2;
+  --foreground: #1c3020;
+  --link: #365f35;
+  --link-hover: #2b4a2d;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--foreground);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(93, 145, 83, 0.16), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(184, 143, 98, 0.2), transparent 38%),
+    linear-gradient(180deg, var(--background-start), var(--background-end));
+}
+
+a {
+  color: var(--link);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
