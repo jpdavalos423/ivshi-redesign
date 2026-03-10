@@ -59,7 +59,16 @@ function parseFeedPayload(payload: unknown): InstagramPost[] {
 export async function getInstagramPosts(
   fallbackPosts: InstagramPost[]
 ): Promise<{ posts: InstagramPost[]; source: "live" | "fallback" }> {
-  const feedUrl = process.env.NEXT_PUBLIC_INSTAGRAM_FEED_URL;
+  const configuredFeedUrl = process.env.NEXT_PUBLIC_INSTAGRAM_FEED_URL;
+  const siteOrigin =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
+    (process.env.NODE_ENV === "development" ? "http://localhost:3000" : undefined);
+  const defaultFeedUrl = siteOrigin ? `${siteOrigin}/api/instagram` : undefined;
+  const feedUrl =
+    configuredFeedUrl && !configuredFeedUrl.includes("instagram.com/")
+      ? configuredFeedUrl
+      : defaultFeedUrl;
 
   if (!feedUrl) {
     return { posts: fallbackPosts.slice(0, 8), source: "fallback" };

@@ -22,11 +22,14 @@ Create `.env.local` with:
 ```bash
 NEXT_PUBLIC_SITE_URL=https://your-domain.example
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
-NEXT_PUBLIC_INSTAGRAM_FEED_URL=https://your-feed-endpoint.example/json
+INSTAGRAM_PROFILE_URL=https://www.instagram.com/your_profile/
+NEXT_PUBLIC_INSTAGRAM_FEED_URL=http://localhost:3000/api/instagram
 ```
 
 Notes:
-- If `NEXT_PUBLIC_INSTAGRAM_FEED_URL` is missing or unavailable, the homepage carousel uses curated fallback posts.
+- `NEXT_PUBLIC_INSTAGRAM_FEED_URL` should point to a JSON endpoint, not directly to `instagram.com`.
+- The project includes `/api/instagram`, which reads `INSTAGRAM_PROFILE_URL` server-side and returns normalized JSON for the carousel.
+- If the feed URL is missing or unavailable, the homepage carousel uses curated fallback posts.
 - Replace outbound form and Notion URLs in `content/site.ts` and `content/pillars.ts`.
 
 ## MVP Pages

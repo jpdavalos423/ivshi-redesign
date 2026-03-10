@@ -16,6 +16,7 @@ html {
 
 body {
   min-height: 100vh;
+  font-size: 17px;
   color: var(--foreground);
   background:
     radial-gradient(circle at 20% 20%, rgba(93, 145, 83, 0.16), transparent 45%),
