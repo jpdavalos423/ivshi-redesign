@@ -10,16 +10,15 @@ export const siteConfig: SiteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? defaultBaseUrl,
   contactEmail: "ivstudenthealthinitiative@gmail.com",
   navLinks: [
-    { label: "Home", href: "/" },
     { label: "About", href: "/about" },
-    { label: "Programs", href: "/programs" },
     { label: "Team", href: "/team" },
+    { label: "Programs", href: "/programs" },
     { label: "Get Involved", href: "/get-involved" }
   ],
   socialLinks: [
     { label: "Instagram", href: "https://www.instagram.com/ivstudenthealthinitiative/" },
     { label: "Facebook", href: "https://www.facebook.com" },
-    { label: "LinkedIn", href: "https://www.linkedin.com" }
+    // { label: "LinkedIn", href: "https://www.linkedin.com" }
   ],
   ctas: {
     homePrimary: {

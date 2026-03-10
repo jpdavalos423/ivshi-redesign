@@ -14,8 +14,8 @@ export function ImpactStats({ stats }: ImpactStatsProps) {
           style={{ animationDelay: `${index * 80}ms` }}
         >
           <p className="text-4xl font-display text-brand-800">{stat.value}</p>
-          <h3 className="mt-2 text-sm font-semibold uppercase tracking-[0.1em] text-brand-700">{stat.label}</h3>
-          <p className="mt-2 text-sm text-brand-900/75">{stat.description}</p>
+          <h3 className="mt-2 text-sm font-semibold uppercase tracking-[0.12em] text-brand-700">{stat.label}</h3>
+          <p className="mt-2 text-base text-brand-900/75">{stat.description}</p>
         </article>
       ))}
     </div>

@@ -26,7 +26,7 @@ export default function GetInvolvedPage() {
           {involvementOptions.map((option) => (
             <article key={option.id} className="rounded-2xl border border-brand-100 bg-brand-50 p-6 shadow-card">
               <h2 className="font-display text-2xl text-brand-900">{option.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-brand-900/80">{option.description}</p>
+              <p className="mt-2 text-base leading-relaxed text-brand-900/80">{option.description}</p>
               <div className="mt-5">
                 <CtaLinkButton cta={option.cta} variant="primary" />
               </div>

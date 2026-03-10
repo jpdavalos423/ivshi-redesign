@@ -6,7 +6,7 @@ import { programPillars } from "@/content/pillars";
 
 export const metadata: Metadata = {
   title: "Programs",
-  description: "Explore IVSHI's Service, Education, and Public Health program pillars.",
+  description: "Explore IVSHI's Volunteering, Education, and Public Health program pillars.",
   alternates: { canonical: "/programs" }
 };
 

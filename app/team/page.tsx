@@ -37,8 +37,8 @@ export default function TeamPage() {
               </div>
               <div className="p-5">
                 <h2 className="font-display text-2xl text-brand-900">{member.name}</h2>
-                <p className="mt-1 text-sm font-semibold uppercase tracking-[0.08em] text-brand-700">{member.role}</p>
-                {member.bio ? <p className="mt-3 text-sm text-brand-900/80">{member.bio}</p> : null}
+                <p className="mt-1 text-sm font-semibold uppercase tracking-[0.12em] text-brand-700">{member.role}</p>
+                {member.bio ? <p className="mt-3 text-base text-brand-900/80">{member.bio}</p> : null}
               </div>
             </article>
           ))}

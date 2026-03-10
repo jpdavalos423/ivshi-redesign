@@ -44,11 +44,6 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
       <div className="flex items-center justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl text-brand-900 sm:text-3xl">Latest on Instagram</h2>
-          <p className="mt-1 text-sm text-brand-900/75">
-            {source === "live"
-              ? "Live feed from IVSHI Instagram posts"
-              : "Curated posts shown while live feed is unavailable"}
-          </p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -88,16 +83,16 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
               alt={post.caption ? `Instagram post: ${post.caption}` : "Instagram post"}
               width={640}
               height={640}
-              className="h-52 w-full object-cover"
+              className="h-56 w-full object-cover"
             />
-            <div className="space-y-3 p-4">
+            <div className="space-y-4 p-4 pb-5">
               {post.caption ? (
-                <p className="max-h-16 overflow-hidden text-sm text-brand-900/85">{post.caption}</p>
+                <p className="line-clamp-4 text-base leading-relaxed text-brand-900/85">{post.caption}</p>
               ) : (
-                <p className="text-sm text-brand-900/70">IVSHI Instagram update</p>
+                <p className="text-base text-brand-900/70">IVSHI Instagram update</p>
               )}
               {post.publishedAt ? (
-                <p className="text-xs uppercase tracking-[0.08em] text-brand-700">
+                <p className="text-xs uppercase tracking-[0.12em] text-brand-700">
                   {new Date(post.publishedAt).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
@@ -109,7 +104,7 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
                 href={post.postUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex rounded-full bg-brand-700 px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-brand-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+                className="inline-flex rounded-full bg-brand-700 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-brand-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
                 onClick={() => {
                   trackEvent("instagram_post_click", {
                     post_id: post.id,

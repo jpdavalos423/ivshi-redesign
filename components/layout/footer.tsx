@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CtaLinkButton } from "@/components/common/cta-link";
 import { siteConfig } from "@/content/site";
@@ -5,7 +6,19 @@ import { siteConfig } from "@/content/site";
 export function Footer() {
   return (
     <footer className="border-t border-brand-100 bg-brand-50/85">
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-3 lg:px-8">
+      <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-4 lg:gap-10 lg:px-8">
+        <div className="flex justify-end lg:self-center">
+          <Link href="/" className="inline-flex">
+            <Image
+              src="/images/logo/logo-256.webp"
+              alt="IVSHI logo"
+              width={120}
+              height={120}
+              className="h-28 w-28 rounded-full object-cover sm:h-32 sm:w-32"
+            />
+          </Link>
+        </div>
+
         <div>
           <h2 className="font-display text-2xl text-brand-900">{siteConfig.shortName}</h2>
           <p className="mt-2 text-sm text-brand-900/75">{siteConfig.description}</p>
