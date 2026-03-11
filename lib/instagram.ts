@@ -60,13 +60,25 @@ export async function getInstagramPosts(
   fallbackPosts: InstagramPost[]
 ): Promise<{ posts: InstagramPost[]; source: "live" | "fallback" }> {
   const configuredFeedUrl = process.env.NEXT_PUBLIC_INSTAGRAM_FEED_URL;
+  const cloudflarePagesUrl = process.env.CF_PAGES_URL
+    ? process.env.CF_PAGES_URL.startsWith("http")
+      ? process.env.CF_PAGES_URL
+      : `https://${process.env.CF_PAGES_URL}`
+    : undefined;
   const siteOrigin =
     process.env.NEXT_PUBLIC_SITE_URL ||
+    cloudflarePagesUrl ||
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
     (process.env.NODE_ENV === "development" ? "http://localhost:3000" : undefined);
   const defaultFeedUrl = siteOrigin ? `${siteOrigin}/api/instagram` : undefined;
+  const isLocalhostFeed = Boolean(
+    configuredFeedUrl &&
+      (configuredFeedUrl.includes("://localhost") || configuredFeedUrl.includes("://127.0.0.1"))
+  );
   const feedUrl =
-    configuredFeedUrl && !configuredFeedUrl.includes("instagram.com/")
+    configuredFeedUrl &&
+    !configuredFeedUrl.includes("instagram.com/") &&
+    !(process.env.NODE_ENV === "production" && isLocalhostFeed)
       ? configuredFeedUrl
       : defaultFeedUrl;
 
