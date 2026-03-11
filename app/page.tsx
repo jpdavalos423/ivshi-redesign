@@ -18,6 +18,8 @@ export const metadata: Metadata = buildPageMetadata({
   keywords: ["community health", "student leadership", "Imperial County"]
 });
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const instagram = await getInstagramPosts(fallbackInstagramPosts);
 
