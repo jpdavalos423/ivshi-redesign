@@ -13,6 +13,7 @@ type ApiPost = {
 const INSTAGRAM_APP_ID = "936619743392459";
 const MAX_POSTS = 8;
 const REVALIDATE_SECONDS = 900;
+const DEFAULT_INSTAGRAM_PROFILE_URL = "https://www.instagram.com/ivstudenthealthinitiative/";
 
 export const revalidate = 900;
 export const runtime = "edge";
@@ -99,14 +100,10 @@ function parseInstagramPayload(payload: unknown): ApiPost[] {
 }
 
 export async function GET() {
-  const profileUrl = process.env.INSTAGRAM_PROFILE_URL;
-
-  if (!profileUrl) {
-    return NextResponse.json(
-      { error: "Missing INSTAGRAM_PROFILE_URL environment variable.", posts: [] },
-      { status: 500 }
-    );
-  }
+  const profileUrl =
+    process.env.INSTAGRAM_PROFILE_URL ||
+    process.env.NEXT_PUBLIC_INSTAGRAM_PROFILE_URL ||
+    DEFAULT_INSTAGRAM_PROFILE_URL;
 
   const username = extractUsername(profileUrl);
 
