@@ -19,6 +19,7 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 
 export default async function HomePage() {
   const instagram = await getInstagramPosts(fallbackInstagramPosts);

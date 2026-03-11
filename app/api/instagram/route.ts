@@ -15,6 +15,7 @@ const MAX_POSTS = 8;
 const REVALIDATE_SECONDS = 900;
 
 export const revalidate = 900;
+export const runtime = "edge";
 
 function toStringOrUndefined(value: unknown): string | undefined {
   if (typeof value === "string" && value.trim().length > 0) {
