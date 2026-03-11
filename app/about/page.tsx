@@ -3,12 +3,14 @@ import { PageHero } from "@/components/common/page-hero";
 import { Section } from "@/components/common/section";
 import { aboutContent } from "@/content/about";
 import { siteConfig } from "@/content/site";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "About",
   description: "Learn about IVSHI's mission, story, goals, and the communities it serves.",
-  alternates: { canonical: "/about" }
-};
+  pathname: "/about",
+  keywords: ["about IVSHI", "mission", "community outreach"]
+});
 
 export default function AboutPage() {
   return (

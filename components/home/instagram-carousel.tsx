@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useId, useRef } from "react";
+import { useId, useRef, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import type { InstagramPost } from "@/types/content";
 
@@ -11,9 +11,12 @@ type InstagramCarouselProps = {
   source: "live" | "fallback";
 };
 
+const IMAGE_FALLBACK_SRC = "/images/instagram/post-1.svg";
+
 export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
   const trackId = useId();
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [failedImageIds, setFailedImageIds] = useState<Set<string>>(new Set());
 
   if (posts.length === 0) {
     return null;
@@ -79,11 +82,23 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
             className="w-full min-w-full snap-start overflow-hidden rounded-2xl border border-brand-100 bg-brand-50 sm:min-w-[calc(50%-0.5rem)] lg:min-w-[calc(33.333%-0.67rem)]"
           >
             <Image
-              src={post.imageUrl}
+              src={failedImageIds.has(post.id) ? IMAGE_FALLBACK_SRC : post.imageUrl}
               alt={post.caption ? `Instagram post: ${post.caption}` : "Instagram post"}
               width={640}
               height={640}
+              unoptimized
               className="h-56 w-full object-cover"
+              onError={() => {
+                setFailedImageIds((previous) => {
+                  if (previous.has(post.id)) {
+                    return previous;
+                  }
+
+                  const next = new Set(previous);
+                  next.add(post.id);
+                  return next;
+                });
+              }}
             />
             <div className="space-y-4 p-4 pb-5">
               {post.caption ? (

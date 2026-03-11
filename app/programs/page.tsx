@@ -3,12 +3,14 @@ import { PageHero } from "@/components/common/page-hero";
 import { Section } from "@/components/common/section";
 import { PillarCard } from "@/components/programs/pillar-card";
 import { programPillars } from "@/content/pillars";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Programs",
   description: "Explore IVSHI's Volunteering, Education, and Public Health program pillars.",
-  alternates: { canonical: "/programs" }
-};
+  pathname: "/programs",
+  keywords: ["volunteering", "education programs", "public health programs"]
+});
 
 export default function ProgramsPage() {
   return (

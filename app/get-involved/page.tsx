@@ -3,12 +3,14 @@ import { CtaLinkButton } from "@/components/common/cta-link";
 import { PageHero } from "@/components/common/page-hero";
 import { Section } from "@/components/common/section";
 import { involvementOptions } from "@/content/get-involved";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Get Involved",
   description: "Apply, volunteer, or join mentorship opportunities through IVSHI.",
-  alternates: { canonical: "/get-involved" }
-};
+  pathname: "/get-involved",
+  keywords: ["join IVSHI", "volunteer opportunities", "mentorship signup"]
+});
 
 export default function GetInvolvedPage() {
   return (

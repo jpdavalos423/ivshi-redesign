@@ -8,13 +8,15 @@ import { fallbackInstagramPosts } from "@/content/instagram";
 import { impactStats } from "@/content/impact";
 import { involvementOptions } from "@/content/get-involved";
 import { getInstagramPosts } from "@/lib/instagram";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Home",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Imperial Valley Student Health Initiative",
   description:
     "IVSHI connects Imperial Valley students and families to mentorship, education, and public health opportunities.",
-  alternates: { canonical: "/" }
-};
+  pathname: "/",
+  keywords: ["community health", "student leadership", "Imperial County"]
+});
 
 export default async function HomePage() {
   const instagram = await getInstagramPosts(fallbackInstagramPosts);

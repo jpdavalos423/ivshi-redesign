@@ -4,12 +4,14 @@ import { PageHero } from "@/components/common/page-hero";
 import { Section } from "@/components/common/section";
 import { siteConfig } from "@/content/site";
 import { teamMembers } from "@/content/team";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Team",
   description: "Meet the student leaders and coordinators behind IVSHI.",
-  alternates: { canonical: "/team" }
-};
+  pathname: "/team",
+  keywords: ["leadership team", "student leaders", "Imperial Valley students"]
+});
 
 export default function TeamPage() {
   return (

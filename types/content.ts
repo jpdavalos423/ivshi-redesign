@@ -1,4 +1,4 @@
-export type PillarId = "service" | "education" | "public-health";
+export type PillarId = "volunteering" | "education" | "public-health";
 
 export type NavLink = {
   label: string;

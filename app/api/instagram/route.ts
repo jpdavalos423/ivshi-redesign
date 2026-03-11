@@ -14,7 +14,7 @@ const INSTAGRAM_APP_ID = "936619743392459";
 const MAX_POSTS = 8;
 const REVALIDATE_SECONDS = 900;
 
-export const revalidate = REVALIDATE_SECONDS;
+export const revalidate = 900;
 
 function toStringOrUndefined(value: unknown): string | undefined {
   if (typeof value === "string" && value.trim().length > 0) {
@@ -59,10 +59,11 @@ function normalizeNode(entry: UnknownRecord): ApiPost | null {
   const captionNode = firstCaption?.node as UnknownRecord | undefined;
   const caption = toStringOrUndefined(captionNode?.text);
   const takenAtTimestamp = typeof entry.taken_at_timestamp === "number" ? entry.taken_at_timestamp : undefined;
+  const proxiedImageUrl = `/api/instagram/image?url=${encodeURIComponent(imageUrl)}`;
 
   return {
     id,
-    imageUrl,
+    imageUrl: proxiedImageUrl,
     postUrl: `https://www.instagram.com/p/${shortcode}/`,
     caption,
     publishedAt: takenAtTimestamp ? new Date(takenAtTimestamp * 1000).toISOString() : undefined
