@@ -89,7 +89,7 @@ export async function getInstagramPosts(
   try {
     const response = await fetch(feedUrl, {
       headers: { Accept: "application/json" },
-      next: { revalidate: 3600 }
+      cache: "no-store"
     });
 
     if (!response.ok) {
