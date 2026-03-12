@@ -1,4 +1,5 @@
 import type { InstagramPost } from "@/types/content";
+import { fetchLiveInstagramPosts } from "@/lib/instagram-live";
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -83,7 +84,10 @@ export async function getInstagramPosts(
       : defaultFeedUrl;
 
   if (!feedUrl) {
-    return { posts: fallbackPosts.slice(0, 8), source: "fallback" };
+    const direct = await fetchLiveInstagramPosts();
+    return direct.length > 0
+      ? { posts: direct, source: "live" }
+      : { posts: fallbackPosts.slice(0, 8), source: "fallback" };
   }
 
   try {
@@ -92,19 +96,20 @@ export async function getInstagramPosts(
       cache: "no-store"
     });
 
-    if (!response.ok) {
-      return { posts: fallbackPosts.slice(0, 8), source: "fallback" };
+    if (response.ok) {
+      const payload = (await response.json()) as unknown;
+      const parsed = parseFeedPayload(payload);
+
+      if (parsed.length > 0) {
+        return { posts: parsed, source: "live" };
+      }
     }
-
-    const payload = (await response.json()) as unknown;
-    const parsed = parseFeedPayload(payload);
-
-    if (parsed.length === 0) {
-      return { posts: fallbackPosts.slice(0, 8), source: "fallback" };
-    }
-
-    return { posts: parsed, source: "live" };
   } catch {
-    return { posts: fallbackPosts.slice(0, 8), source: "fallback" };
+    // Fall through to direct fetch fallback.
   }
+
+  const direct = await fetchLiveInstagramPosts();
+  return direct.length > 0
+    ? { posts: direct, source: "live" }
+    : { posts: fallbackPosts.slice(0, 8), source: "fallback" };
 }
