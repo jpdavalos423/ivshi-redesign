@@ -13,7 +13,7 @@ export const impactStats: ImpactStat[] = [
   },
   {
     label: "Active Programs",
-    value: "10+",
+    value: "4+",
     description: "Service, education, and public health initiatives currently running."
   }
 ];
