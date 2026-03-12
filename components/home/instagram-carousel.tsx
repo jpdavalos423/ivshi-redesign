@@ -125,6 +125,9 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
               height={640}
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
               quality={62}
+              // Cloudflare/OpenNext returns 404 for /_next/image when the source is an internal API URL.
+              // These images are already normalized by /api/instagram/image, so bypass optimizer here.
+              unoptimized
               className="h-56 w-full object-cover"
               onError={() => {
                 setFailedImageIds((previous) => {
