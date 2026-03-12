@@ -1,6 +1,7 @@
 import type { InstagramPost } from "@/types/content";
 
 type UnknownRecord = Record<string, unknown>;
+export type InstagramFetchFailureReason = "invalid_username" | "upstream_non_200" | "parse_empty" | "fetch_exception";
 
 const INSTAGRAM_APP_ID = "936619743392459";
 const MAX_POSTS = 8;
@@ -91,6 +92,14 @@ function parseInstagramPayload(payload: unknown): InstagramPost[] {
 }
 
 export async function fetchLiveInstagramPosts(): Promise<InstagramPost[]> {
+  const result = await fetchLiveInstagramPostsResult();
+  return result.posts;
+}
+
+export async function fetchLiveInstagramPostsResult(): Promise<{
+  posts: InstagramPost[];
+  failureReason?: InstagramFetchFailureReason;
+}> {
   const profileUrl =
     process.env.INSTAGRAM_PROFILE_URL ||
     process.env.NEXT_PUBLIC_INSTAGRAM_PROFILE_URL ||
@@ -98,7 +107,7 @@ export async function fetchLiveInstagramPosts(): Promise<InstagramPost[]> {
   const username = extractUsername(profileUrl);
 
   if (!username) {
-    return [];
+    return { posts: [], failureReason: "invalid_username" };
   }
 
   const upstreamUrl = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${encodeURIComponent(username)}`;
@@ -116,12 +125,18 @@ export async function fetchLiveInstagramPosts(): Promise<InstagramPost[]> {
     });
 
     if (!response.ok) {
-      return [];
+      return { posts: [], failureReason: "upstream_non_200" };
     }
 
     const payload = (await response.json()) as unknown;
-    return parseInstagramPayload(payload);
+    const posts = parseInstagramPayload(payload);
+
+    if (posts.length === 0) {
+      return { posts: [], failureReason: "parse_empty" };
+    }
+
+    return { posts };
   } catch {
-    return [];
+    return { posts: [], failureReason: "fetch_exception" };
   }
 }

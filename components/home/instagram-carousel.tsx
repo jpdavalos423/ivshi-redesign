@@ -19,8 +19,18 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
   const [carouselPosts, setCarouselPosts] = useState(posts);
   const [dataSource, setDataSource] = useState(source);
   const [failedImageIds, setFailedImageIds] = useState<Set<string>>(new Set());
+  const hasLoggedInitialState = useRef(false);
 
   useEffect(() => {
+    if (!hasLoggedInitialState.current) {
+      hasLoggedInitialState.current = true;
+      console.info(`[instagram-carousel] initial source=${source} posts=${posts.length}`);
+    }
+
+    if (source !== "fallback") {
+      return;
+    }
+
     let isCanceled = false;
 
     async function hydrateLivePosts() {
@@ -30,20 +40,25 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
         });
 
         if (!response.ok) {
+          console.warn(`[instagram-carousel] hydration_failed status=${response.status}`);
           return;
         }
 
         const payload = (await response.json()) as { posts?: InstagramPost[]; source?: "live" | "fallback" };
         const nextPosts = Array.isArray(payload.posts) ? payload.posts : [];
+        const nextSource = payload.source === "live" ? "live" : "fallback";
 
         if (isCanceled || nextPosts.length === 0) {
+          console.info(`[instagram-carousel] hydrated source=${nextSource} posts=${nextPosts.length}`);
           return;
         }
 
         setCarouselPosts(nextPosts.slice(0, 8));
-        setDataSource(payload.source === "live" ? "live" : "fallback");
+        setDataSource(nextSource);
         setFailedImageIds(new Set());
+        console.info(`[instagram-carousel] hydrated source=${nextSource} posts=${Math.min(nextPosts.length, 8)}`);
       } catch {
+        console.warn("[instagram-carousel] hydration_failed status=network_error");
         // Keep initial fallback posts when the feed request fails.
       }
     }
@@ -53,7 +68,7 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
     return () => {
       isCanceled = true;
     };
-  }, []);
+  }, [posts.length, source]);
 
   if (carouselPosts.length === 0) {
     return null;
