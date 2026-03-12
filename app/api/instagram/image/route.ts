@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const REVALIDATE_SECONDS = 900;
+const REVALIDATE_SECONDS = 86400;
 const ALLOWED_HOST_SUFFIXES = ["cdninstagram.com", "fbcdn.net"];
 
 export const runtime = "edge";

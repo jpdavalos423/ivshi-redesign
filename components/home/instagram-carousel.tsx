@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import type { InstagramPost } from "@/types/content";
 
@@ -16,9 +16,46 @@ const IMAGE_FALLBACK_SRC = "/images/instagram/post-1.svg";
 export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
   const trackId = useId();
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [carouselPosts, setCarouselPosts] = useState(posts);
+  const [dataSource, setDataSource] = useState(source);
   const [failedImageIds, setFailedImageIds] = useState<Set<string>>(new Set());
 
-  if (posts.length === 0) {
+  useEffect(() => {
+    let isCanceled = false;
+
+    async function hydrateLivePosts() {
+      try {
+        const response = await fetch("/api/instagram", {
+          headers: { Accept: "application/json" }
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const payload = (await response.json()) as { posts?: InstagramPost[]; source?: "live" | "fallback" };
+        const nextPosts = Array.isArray(payload.posts) ? payload.posts : [];
+
+        if (isCanceled || nextPosts.length === 0) {
+          return;
+        }
+
+        setCarouselPosts(nextPosts.slice(0, 8));
+        setDataSource(payload.source === "live" ? "live" : "fallback");
+        setFailedImageIds(new Set());
+      } catch {
+        // Keep initial fallback posts when the feed request fails.
+      }
+    }
+
+    hydrateLivePosts();
+
+    return () => {
+      isCanceled = true;
+    };
+  }, []);
+
+  if (carouselPosts.length === 0) {
     return null;
   }
 
@@ -37,7 +74,7 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
 
     trackEvent("instagram_carousel_navigate", {
       direction,
-      source,
+      source: dataSource,
       track_id: trackId
     });
   };
@@ -75,7 +112,7 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
         role="region"
         aria-label="Instagram post carousel"
       >
-        {posts.map((post) => (
+        {carouselPosts.map((post) => (
           <article
             key={post.id}
             data-instagram-card="true"
@@ -86,7 +123,8 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
               alt={post.caption ? `Instagram post: ${post.caption}` : "Instagram post"}
               width={640}
               height={640}
-              unoptimized
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              quality={62}
               className="h-56 w-full object-cover"
               onError={() => {
                 setFailedImageIds((previous) => {
@@ -123,7 +161,7 @@ export function InstagramCarousel({ posts, source }: InstagramCarouselProps) {
                 onClick={() => {
                   trackEvent("instagram_post_click", {
                     post_id: post.id,
-                    source,
+                    source: dataSource,
                     destination: post.postUrl
                   });
                 }}

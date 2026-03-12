@@ -2,6 +2,7 @@ import type { InstagramPost } from "@/types/content";
 import { fetchLiveInstagramPosts } from "@/lib/instagram-live";
 
 type UnknownRecord = Record<string, unknown>;
+const REVALIDATE_SECONDS = 900;
 
 function toStringOrUndefined(value: unknown): string | undefined {
   if (typeof value === "string" && value.trim().length > 0) {
@@ -57,43 +58,38 @@ function parseFeedPayload(payload: unknown): InstagramPost[] {
     .slice(0, 8);
 }
 
+function shouldUseConfiguredFeedUrl(configuredFeedUrl?: string): configuredFeedUrl is string {
+  if (!configuredFeedUrl || configuredFeedUrl.includes("instagram.com/")) {
+    return false;
+  }
+
+  const isLocalhostFeed = configuredFeedUrl.includes("://localhost") || configuredFeedUrl.includes("://127.0.0.1");
+
+  return !(process.env.NODE_ENV === "production" && isLocalhostFeed);
+}
+
+async function getDirectInstagramPosts(
+  fallbackPosts: InstagramPost[]
+): Promise<{ posts: InstagramPost[]; source: "live" | "fallback" }> {
+  const live = await fetchLiveInstagramPosts();
+
+  return live.length > 0
+    ? { posts: live, source: "live" }
+    : { posts: fallbackPosts.slice(0, 8), source: "fallback" };
+}
+
 export async function getInstagramPosts(
   fallbackPosts: InstagramPost[]
 ): Promise<{ posts: InstagramPost[]; source: "live" | "fallback" }> {
   const configuredFeedUrl = process.env.NEXT_PUBLIC_INSTAGRAM_FEED_URL;
-  const cloudflarePagesUrl = process.env.CF_PAGES_URL
-    ? process.env.CF_PAGES_URL.startsWith("http")
-      ? process.env.CF_PAGES_URL
-      : `https://${process.env.CF_PAGES_URL}`
-    : undefined;
-  const siteOrigin =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    cloudflarePagesUrl ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
-    (process.env.NODE_ENV === "development" ? "http://localhost:3000" : undefined);
-  const defaultFeedUrl = siteOrigin ? `${siteOrigin}/api/instagram` : undefined;
-  const isLocalhostFeed = Boolean(
-    configuredFeedUrl &&
-      (configuredFeedUrl.includes("://localhost") || configuredFeedUrl.includes("://127.0.0.1"))
-  );
-  const feedUrl =
-    configuredFeedUrl &&
-    !configuredFeedUrl.includes("instagram.com/") &&
-    !(process.env.NODE_ENV === "production" && isLocalhostFeed)
-      ? configuredFeedUrl
-      : defaultFeedUrl;
-
-  if (!feedUrl) {
-    const direct = await fetchLiveInstagramPosts();
-    return direct.length > 0
-      ? { posts: direct, source: "live" }
-      : { posts: fallbackPosts.slice(0, 8), source: "fallback" };
+  if (!shouldUseConfiguredFeedUrl(configuredFeedUrl)) {
+    return getDirectInstagramPosts(fallbackPosts);
   }
 
   try {
-    const response = await fetch(feedUrl, {
+    const response = await fetch(configuredFeedUrl, {
       headers: { Accept: "application/json" },
-      cache: "no-store"
+      next: { revalidate: REVALIDATE_SECONDS }
     });
 
     if (response.ok) {
@@ -108,8 +104,5 @@ export async function getInstagramPosts(
     // Fall through to direct fetch fallback.
   }
 
-  const direct = await fetchLiveInstagramPosts();
-  return direct.length > 0
-    ? { posts: direct, source: "live" }
-    : { posts: fallbackPosts.slice(0, 8), source: "fallback" };
+  return getDirectInstagramPosts(fallbackPosts);
 }

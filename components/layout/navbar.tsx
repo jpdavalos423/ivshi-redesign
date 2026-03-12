@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
 import { CtaLinkButton } from "@/components/common/cta-link";
 import { siteConfig } from "@/content/site";
 import { cn } from "@/lib/utils";
@@ -28,11 +27,7 @@ export function Navbar() {
       )}
     >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <motion.div
-          initial={isHome ? { opacity: 0, x: -16 } : false}
-          animate={isHome ? { opacity: 1, x: 0 } : undefined}
-          transition={{ delay: 0.12, duration: 0.45, ease: "easeOut" }}
-        >
+        <div className={cn(isHome && "animate-fade-in-up")} style={isHome ? { animationDelay: "120ms" } : undefined}>
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/images/logo/logo-256.webp"
@@ -44,7 +39,7 @@ export function Navbar() {
             />
             <span className={cn("font-display text-lg", isHome ? "text-white" : "text-brand-900")}>IVSHI</span>
           </Link>
-        </motion.div>
+        </div>
 
         <ul className="hidden items-center gap-5 md:flex">
           {siteConfig.navLinks.map((link, index) => {
@@ -54,15 +49,10 @@ export function Navbar() {
                 : pathname.startsWith(link.href);
 
             return (
-              <motion.li
+              <li
                 key={link.href}
-                initial={isHome ? { opacity: 0, x: -14 } : false}
-                animate={isHome ? { opacity: 1, x: 0 } : undefined}
-                transition={{
-                  delay: 0.2 + index * 0.08,
-                  duration: 0.4,
-                  ease: "easeOut"
-                }}
+                className={cn(isHome && "animate-fade-in-up")}
+                style={isHome ? { animationDelay: `${200 + index * 80}ms` } : undefined}
               >
                 <Link
                   href={link.href}
@@ -79,16 +69,14 @@ export function Navbar() {
                 >
                   {link.label}
                 </Link>
-              </motion.li>
+              </li>
             );
           })}
         </ul>
 
-        <motion.div
-          className="hidden md:block"
-          initial={isHome ? { opacity: 0, x: -12 } : false}
-          animate={isHome ? { opacity: 1, x: 0 } : undefined}
-          transition={{ delay: 0.66, duration: 0.4, ease: "easeOut" }}
+        <div
+          className={cn("hidden md:block", isHome && "animate-fade-in-up")}
+          style={isHome ? { animationDelay: "660ms" } : undefined}
         >
           <CtaLinkButton
             cta={navContactCta}
@@ -98,13 +86,11 @@ export function Navbar() {
               isHome && "!bg-white/10 !text-white !ring-white/35 hover:!bg-white/20 hover:!text-white"
             )}
           />
-        </motion.div>
+        </div>
 
-        <motion.details
-          className="group relative md:hidden"
-          initial={isHome ? { opacity: 0, x: -12 } : false}
-          animate={isHome ? { opacity: 1, x: 0 } : undefined}
-          transition={{ delay: 0.3, duration: 0.4, ease: "easeOut" }}
+        <details
+          className={cn("group relative md:hidden", isHome && "animate-fade-in-up")}
+          style={isHome ? { animationDelay: "300ms" } : undefined}
         >
           <summary
             className={cn(
@@ -149,7 +135,7 @@ export function Navbar() {
               />
             </div>
           </div>
-        </motion.details>
+        </details>
       </div>
     </nav>
   );

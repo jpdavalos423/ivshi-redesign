@@ -1,8 +1,5 @@
-"use client";
-
 import Link from "next/link";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { motion } from "motion/react";
 
 type ScrollIndicatorProps = {
   href: string;
@@ -11,11 +8,9 @@ type ScrollIndicatorProps = {
 
 export function ScrollIndicator({ href, delay = 0.9 }: ScrollIndicatorProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.7, ease: "easeOut" }}
-      className="pointer-events-none absolute inset-x-0 bottom-5 z-10 flex justify-center sm:bottom-10"
+    <div
+      className="animate-fade-in-up pointer-events-none absolute inset-x-0 bottom-5 z-10 flex justify-center sm:bottom-10"
+      style={{ animationDelay: `${delay}s` }}
     >
       <div className="pointer-events-auto">
         <Link
@@ -26,6 +21,6 @@ export function ScrollIndicator({ href, delay = 0.9 }: ScrollIndicatorProps) {
           <ChevronDownIcon className="size-6 text-white" />
         </Link>
       </div>
-    </motion.div>
+    </div>
   );
 }

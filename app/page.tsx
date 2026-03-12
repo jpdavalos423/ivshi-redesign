@@ -7,7 +7,6 @@ import { InstagramCarousel } from "@/components/home/instagram-carousel";
 import { fallbackInstagramPosts } from "@/content/instagram";
 import { impactStats } from "@/content/impact";
 import { involvementOptions } from "@/content/get-involved";
-import { getInstagramPosts } from "@/lib/instagram";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -18,12 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
   keywords: ["community health", "student leadership", "Imperial County"]
 });
 
-export const dynamic = "force-dynamic";
-export const runtime = "edge";
+export const revalidate = 900;
 
-export default async function HomePage() {
-  const instagram = await getInstagramPosts(fallbackInstagramPosts);
-
+export default function HomePage() {
   return (
     <>
       <HomeHero />
@@ -61,7 +57,7 @@ export default async function HomePage() {
       </Section>
 
       <Section id="instagram" className="pt-4 pb-16">
-        <InstagramCarousel posts={instagram.posts} source={instagram.source} />
+        <InstagramCarousel posts={fallbackInstagramPosts} source="fallback" />
       </Section>
     </>
   );
