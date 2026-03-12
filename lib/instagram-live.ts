@@ -50,10 +50,11 @@ function normalizeNode(entry: UnknownRecord): InstagramPost | null {
   const captionNode = firstCaption?.node as UnknownRecord | undefined;
   const caption = toStringOrUndefined(captionNode?.text);
   const takenAtTimestamp = typeof entry.taken_at_timestamp === "number" ? entry.taken_at_timestamp : undefined;
+  const proxiedImageUrl = `/api/instagram/image?url=${encodeURIComponent(imageUrl)}`;
 
   return {
     id,
-    imageUrl,
+    imageUrl: proxiedImageUrl,
     postUrl: `https://www.instagram.com/p/${shortcode}/`,
     caption,
     publishedAt: takenAtTimestamp ? new Date(takenAtTimestamp * 1000).toISOString() : undefined
