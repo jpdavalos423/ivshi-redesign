@@ -4,7 +4,7 @@ const REVALIDATE_SECONDS = 900;
 const ALLOWED_HOST_SUFFIXES = ["cdninstagram.com", "fbcdn.net"];
 
 export const runtime = "edge";
-export const revalidate = REVALIDATE_SECONDS;
+export const revalidate = 900;
 
 function isAllowedHost(hostname: string): boolean {
   return ALLOWED_HOST_SUFFIXES.some((suffix) => hostname === suffix || hostname.endsWith(`.${suffix}`));
