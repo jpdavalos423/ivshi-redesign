@@ -28,6 +28,11 @@ body {
   animation: fade-in-up 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.defer-render {
+  content-visibility: auto;
+  contain-intrinsic-size: 700px;
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;

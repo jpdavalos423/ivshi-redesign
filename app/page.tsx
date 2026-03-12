@@ -3,7 +3,7 @@ import { CtaLinkButton } from "@/components/common/cta-link";
 import { Section } from "@/components/common/section";
 import { HomeHero } from "@/components/home/home-hero";
 import { ImpactStats } from "@/components/home/impact-stats";
-import { InstagramCarousel } from "@/components/home/instagram-carousel";
+import { LazyInstagramCarousel } from "@/components/home/lazy-instagram-carousel";
 import { fallbackInstagramPosts } from "@/content/instagram";
 import { impactStats } from "@/content/impact";
 import { involvementOptions } from "@/content/get-involved";
@@ -34,7 +34,7 @@ export default function HomePage() {
         <ImpactStats stats={impactStats} />
       </Section>
 
-      <Section id="get-involved" className="pt-4">
+      <Section id="get-involved" className="defer-render pt-4">
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <h2 className="font-display text-3xl text-brand-900">Get Involved</h2>
@@ -56,8 +56,8 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section id="instagram" className="pt-4 pb-16">
-        <InstagramCarousel posts={fallbackInstagramPosts} source="fallback" />
+      <Section id="instagram" className="defer-render pt-4 pb-16">
+        <LazyInstagramCarousel posts={fallbackInstagramPosts} source="fallback" />
       </Section>
     </>
   );
