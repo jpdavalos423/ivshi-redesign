@@ -38,6 +38,7 @@ export type TeamMember = {
   name: string;
   role: string;
   photoUrl?: string;
+  photoPositionClassName?: string;
   bio?: string;
   order: number;
 };
@@ -53,6 +54,7 @@ export type InvolvementOption = {
   title: string;
   description: string;
   cta: CtaLink;
+  secondaryCta?: CtaLink;
 };
 
 export type SiteConfig = {

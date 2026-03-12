@@ -10,6 +10,7 @@ type CtaLinkProps = {
   className?: string;
   variant?: "primary" | "secondary" | "ghost";
   disabled?: boolean;
+  onClick?: () => void;
 };
 
 const variantStyles: Record<NonNullable<CtaLinkProps["variant"]>, string> = {
@@ -25,7 +26,8 @@ export function CtaLinkButton({
   cta,
   className,
   variant = "primary",
-  disabled = false
+  disabled = false,
+  onClick
 }: CtaLinkProps) {
   const classes = cn(
     "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition",
@@ -57,6 +59,7 @@ export function CtaLinkButton({
           cta_label: cta.label,
           cta_destination: cta.href
         });
+        onClick?.();
       }}
       {...linkProps}
     >

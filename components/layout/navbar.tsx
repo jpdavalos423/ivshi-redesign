@@ -2,14 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { CtaLinkButton } from "@/components/common/cta-link";
 import { siteConfig } from "@/content/site";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
+  const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [navHeight, setNavHeight] = useState(64);
   const isHome = pathname === "/";
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
   const navContactCta = {
     id: "nav_contact_us",
     label: "Contact Us",
@@ -18,10 +24,67 @@ export function Navbar() {
     eventName: "cta_nav_contact_us_click"
   };
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const updateNavHeight = () => {
+      if (navRef.current) {
+        setNavHeight(navRef.current.getBoundingClientRect().height);
+      }
+    };
+
+    updateNavHeight();
+
+    if (!navRef.current || typeof ResizeObserver === "undefined") {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(updateNavHeight);
+    resizeObserver.observe(navRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   return (
     <nav
+      ref={navRef}
       className={cn(
-        "z-50 border-b backdrop-blur-md",
+        "z-50 w-full border-b backdrop-blur-md",
         isHome ? "fixed inset-x-0 top-0" : "sticky top-0",
         isHome ? "border-white/15 bg-black/20" : "border-brand-100/80 bg-brand-50/90"
       )}
@@ -88,54 +151,142 @@ export function Navbar() {
           />
         </div>
 
-        <details
-          className={cn("group relative md:hidden", isHome && "animate-fade-in-up")}
+        <div
+          className={cn("relative md:hidden", isHome && "animate-fade-in-up")}
           style={isHome ? { animationDelay: "300ms" } : undefined}
         >
-          <summary
+          <button
+            type="button"
             className={cn(
-              "list-none rounded-full border px-3 py-2 marker:content-none",
+              "rounded-full border px-3 py-2 transition-colors duration-200 ease-out motion-reduce:transition-none",
               isHome ? "border-white/35 text-white" : "border-brand-200 text-brand-800"
             )}
-            aria-label="Open navigation menu"
+            aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-navigation-drawer"
+            onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
           >
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">{isMobileMenuOpen ? "Close menu" : "Open menu"}</span>
             <span aria-hidden="true" className="flex flex-col gap-1">
-              <span className={cn("block h-0.5 w-5 rounded", isHome ? "bg-white" : "bg-brand-800")} />
-              <span className={cn("block h-0.5 w-5 rounded", isHome ? "bg-white" : "bg-brand-800")} />
-              <span className={cn("block h-0.5 w-5 rounded", isHome ? "bg-white" : "bg-brand-800")} />
-            </span>
-          </summary>
-          <div
-            className={cn(
-              "absolute right-0 mt-2 w-56 rounded-2xl border p-2 shadow-card",
-              isHome ? "border-white/25 bg-black/70 backdrop-blur-md" : "border-brand-100 bg-brand-50"
-            )}
-          >
-            {siteConfig.navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
+              <span
                 className={cn(
-                  "block rounded-xl px-3 py-2 text-sm",
-                  isHome ? "text-white hover:bg-white/20" : "text-brand-800 hover:bg-brand-100"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <div className="px-2 py-2">
-              <CtaLinkButton
-                cta={navContactCta}
-                variant={isHome ? "ghost" : "secondary"}
-                className={cn(
-                  "w-full",
-                  isHome && "!bg-white/10 !text-white !ring-white/35 hover:!bg-white/20 hover:!text-white"
+                  "block h-0.5 w-5 rounded transition-all duration-200 ease-out motion-reduce:transition-none",
+                  isHome ? "bg-white" : "bg-brand-800",
+                  isMobileMenuOpen && "translate-y-[6px] rotate-45"
                 )}
               />
+              <span
+                className={cn(
+                  "block h-0.5 w-5 rounded transition-all duration-200 ease-out motion-reduce:transition-none",
+                  isHome ? "bg-white" : "bg-brand-800",
+                  isMobileMenuOpen && "opacity-0"
+                )}
+              />
+              <span
+                className={cn(
+                  "block h-0.5 w-5 rounded transition-all duration-200 ease-out motion-reduce:transition-none",
+                  isHome ? "bg-white" : "bg-brand-800",
+                  isMobileMenuOpen && "-translate-y-[6px] -rotate-45"
+                )}
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div className="md:hidden">
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          aria-hidden={!isMobileMenuOpen}
+          tabIndex={isMobileMenuOpen ? 0 : -1}
+          onClick={closeMobileMenu}
+          style={{ top: navHeight }}
+          className={cn(
+            "fixed inset-x-0 bottom-0 z-40 bg-black/45 transition-opacity duration-200 ease-out motion-reduce:transition-none",
+            isMobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+          )}
+        />
+
+        <div
+          className={cn(
+            "fixed right-0 top-0 z-50 h-dvh w-[min(22rem,90vw)] overflow-hidden",
+            isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"
+          )}
+          aria-hidden={!isMobileMenuOpen}
+          inert={!isMobileMenuOpen}
+        >
+          <aside
+            id="mobile-navigation-drawer"
+            className={cn(
+              "flex h-full w-full flex-col border-l p-4 shadow-card",
+              "transition-all duration-200 ease-out motion-reduce:transition-none",
+              isHome ? "border-white/25 bg-black/90 backdrop-blur-md" : "border-brand-100 bg-brand-50",
+              isMobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+            )}
+          >
+            <div className="flex items-center justify-between gap-4">
+              <p className={cn("font-display text-lg", isHome ? "text-white" : "text-brand-900")}>Menu</p>
+              <button
+                type="button"
+                onClick={closeMobileMenu}
+                className={cn(
+                  "inline-flex rounded-full border p-2 transition-colors duration-200 ease-out motion-reduce:transition-none",
+                  isHome
+                    ? "border-white/35 text-white hover:bg-white/15"
+                    : "border-brand-200 text-brand-800 hover:bg-brand-100"
+                )}
+                aria-label="Close navigation menu"
+              >
+                <span className="sr-only">Close menu</span>
+                <XMarkIcon aria-hidden="true" className="h-5 w-5" />
+              </button>
             </div>
-          </div>
-        </details>
+
+            <div className="mt-5 flex flex-1 flex-col">
+              <div className="space-y-1">
+                {siteConfig.navLinks.map((link) => {
+                  const isActive =
+                    link.href === "/"
+                      ? pathname === "/"
+                      : pathname.startsWith(link.href);
+
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={closeMobileMenu}
+                      className={cn(
+                        "block rounded-xl px-3 py-2.5 text-base font-medium transition-colors duration-200 ease-out motion-reduce:transition-none",
+                        isHome
+                          ? isActive
+                            ? "bg-white/20 text-white"
+                            : "text-white hover:bg-white/15"
+                          : isActive
+                            ? "bg-brand-100 text-brand-900"
+                            : "text-brand-800 hover:bg-brand-100"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <div className={cn("mt-auto border-t pt-4", isHome ? "border-white/20" : "border-brand-100")}>
+                <CtaLinkButton
+                  cta={navContactCta}
+                  variant={isHome ? "ghost" : "secondary"}
+                  onClick={closeMobileMenu}
+                  className={cn(
+                    "w-full",
+                    isHome && "!bg-white/10 !text-white !ring-white/35 hover:!bg-white/20 hover:!text-white"
+                  )}
+                />
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
     </nav>
   );

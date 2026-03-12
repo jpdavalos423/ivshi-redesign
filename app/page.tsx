@@ -8,7 +8,7 @@ import { ImpactStats } from "@/components/home/impact-stats";
 import { LazyInstagramCarousel } from "@/components/home/lazy-instagram-carousel";
 import { fallbackInstagramPosts } from "@/content/instagram";
 import { impactStats } from "@/content/impact";
-import { involvementOptions } from "@/content/get-involved";
+import { homeInvolvementOptions } from "@/content/get-involved";
 import { getInstagramPosts } from "@/lib/instagram";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -57,7 +57,7 @@ export default async function HomePage() {
           </Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          {involvementOptions.map((option) => (
+          {homeInvolvementOptions.map((option) => (
             <article key={option.id} className="rounded-2xl border border-brand-100 bg-brand-50 p-6 shadow-card">
               <h3 className="font-display text-2xl text-brand-900">{option.title}</h3>
               <p className="mt-2 text-base text-brand-900/80">{option.description}</p>

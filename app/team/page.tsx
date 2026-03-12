@@ -7,10 +7,10 @@ import { teamMembers } from "@/content/team";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Team",
-  description: "Meet the student leaders and coordinators behind IVSHI.",
+  title: "Board",
+  description: "The IVSHI board guides strategy, student leadership, and community partnerships.",
   pathname: "/team",
-  keywords: ["leadership team", "student leaders", "Imperial Valley students"]
+  keywords: ["IVSHI board", "student leadership", "Imperial Valley"]
 });
 
 export default function TeamPage() {
@@ -18,29 +18,32 @@ export default function TeamPage() {
     <>
       <Section className="pt-12 sm:pt-16">
         <PageHero
-          eyebrow="Team"
-          title="The people moving IVSHI forward"
-          description="Our leadership and program coordinators work with students, schools, and community partners to expand health-focused opportunities."
+          eyebrow="Board"
+          title="Meet the IVSHI Board"
+          description="The IVSHI board guides strategy, student leadership, and community partnerships."
+          descriptionClassName="text-balance"
           primaryCta={siteConfig.ctas.teamPrimary}
         />
       </Section>
 
       <Section className="pt-4 pb-16">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 md:grid-cols-2">
           {teamMembers.map((member) => (
-            <article key={member.name} className="overflow-hidden rounded-2xl border border-brand-100 bg-brand-50 shadow-card">
-              <div className="relative h-52 w-full bg-brand-100">
-                <Image
-                  src={member.photoUrl ?? "/images/team/team-placeholder.svg"}
-                  alt={`${member.name} photo`}
-                  fill
-                  className="object-cover"
-                />
+            // Future enhancement: make each card open a short member bio.
+            <article key={member.name} className="w-full overflow-hidden rounded-2xl border border-brand-100 bg-brand-50 shadow-card">
+              <div className="w-full bg-brand-100">
+                <div className="relative w-full aspect-[4/3] overflow-hidden rounded-t-xl">
+                  <Image
+                    src={member.photoUrl ?? "/images/team/team-placeholder.svg"}
+                    alt={`${member.name} photo`}
+                    fill
+                    className={`object-cover ${member.photoPositionClassName ?? ""}`}
+                  />
+                </div>
               </div>
               <div className="p-5">
                 <h2 className="font-display text-2xl text-brand-900">{member.name}</h2>
                 <p className="mt-1 text-sm font-semibold uppercase tracking-[0.12em] text-brand-700">{member.role}</p>
-                {member.bio ? <p className="mt-3 text-base text-brand-900/80">{member.bio}</p> : null}
               </div>
             </article>
           ))}

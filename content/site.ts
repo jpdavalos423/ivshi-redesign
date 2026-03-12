@@ -6,7 +6,7 @@ export const siteConfig: SiteConfig = {
   name: "Imperial Valley Student Health Initiative",
   shortName: "IVSHI",
   description:
-    "IVSHI connects students and families with mentorship, education, and public health opportunities across Imperial Valley.",
+    "IVSHI connects students with mentorship, education, and public health opportunities across the Imperial Valley.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? defaultBaseUrl,
   contactEmail: "ivstudenthealthinitiative@gmail.com",
   navLinks: [
@@ -66,30 +66,37 @@ export const siteConfig: SiteConfig = {
     joinIvshi: {
       id: "get_involved_join_ivshi",
       label: "Join IVSHI",
-      href: "https://forms.gle/replace-with-join-link",
+      href: "https://docs.google.com/forms/d/e/1FAIpQLSfU20Jg0XlmdFKrphwyqLENUDTGS8dDPIuf1UYLgcUhhTt5vQ/viewform",
       external: true,
       eventName: "cta_join_ivshi_click"
     },
     mentorshipSignup: {
       id: "get_involved_mentorship_signup",
       label: "Mentorship Signup",
-      href: "https://forms.gle/replace-with-mentorship-link",
+      href: "https://docs.google.com/forms/d/e/1FAIpQLScuVtmXwTMGDQCOJOWpeSsSRlrrO5yUR0X49SNNlviODe-w_g/viewform",
       external: true,
       eventName: "cta_mentorship_signup_click"
     },
     hsRepApplication: {
       id: "get_involved_hs_rep_application",
       label: "High School Rep Application",
-      href: "https://forms.gle/replace-with-hs-rep-link",
+      href: "https://docs.google.com/forms/d/e/1FAIpQLSdPZGm5Jid_XfAx8dNSijBdEjU1gk7S_EkjAqZ8yfwrR81qqw/viewform?usp=sf_link",
       external: true,
       eventName: "cta_hs_rep_application_click"
     },
-    volunteer: {
-      id: "get_involved_volunteer",
-      label: "Volunteer",
-      href: "https://forms.gle/replace-with-volunteer-link",
+    pathwayToSuccessProgram: {
+      id: "get_involved_pathway_to_success_program",
+      label: "Pathway to Success Program",
+      href: "https://forms.gle/zKHxT99giYjzb2Uv8",
       external: true,
-      eventName: "cta_volunteer_click"
+      eventName: "cta_pathway_to_success_program_click"
+    },
+    pathwayToSuccessMoreInformation: {
+      id: "get_involved_pathway_to_success_more_information",
+      label: "More Information",
+      href: "https://docs.google.com/document/d/1QfBJkWIo00BFPRPJA67Kj2BLpk_uEj1GkUo6KCPrOQU/edit?usp=sharing",
+      external: true,
+      eventName: "cta_pathway_to_success_more_information_click"
     }
   }
 };
