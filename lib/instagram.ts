@@ -68,22 +68,17 @@ function shouldUseConfiguredFeedUrl(configuredFeedUrl?: string): configuredFeedU
   return !(process.env.NODE_ENV === "production" && isLocalhostFeed);
 }
 
-async function getDirectInstagramPosts(
-  fallbackPosts: InstagramPost[]
-): Promise<{ posts: InstagramPost[]; source: "live" | "fallback" }> {
-  const live = await fetchLiveInstagramPosts();
-
-  return live.length > 0
-    ? { posts: live, source: "live" }
-    : { posts: fallbackPosts.slice(0, 8), source: "fallback" };
-}
-
 export async function getInstagramPosts(
   fallbackPosts: InstagramPost[]
 ): Promise<{ posts: InstagramPost[]; source: "live" | "fallback" }> {
+  const direct = await fetchLiveInstagramPosts();
+  if (direct.length > 0) {
+    return { posts: direct, source: "live" };
+  }
+
   const configuredFeedUrl = process.env.NEXT_PUBLIC_INSTAGRAM_FEED_URL;
   if (!shouldUseConfiguredFeedUrl(configuredFeedUrl)) {
-    return getDirectInstagramPosts(fallbackPosts);
+    return { posts: fallbackPosts.slice(0, 8), source: "fallback" };
   }
 
   try {
@@ -104,5 +99,5 @@ export async function getInstagramPosts(
     // Fall through to direct fetch fallback.
   }
 
-  return getDirectInstagramPosts(fallbackPosts);
+  return { posts: fallbackPosts.slice(0, 8), source: "fallback" };
 }
