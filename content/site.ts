@@ -18,7 +18,10 @@ export const siteConfig: SiteConfig = {
   socialLinks: [
     { label: "Instagram", href: "https://www.instagram.com/ivstudenthealthinitiative/" },
     { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61564060259826&mibextid=wwXIfr&mibextid=wwXIfr" },
-    // { label: "LinkedIn", href: "https://www.linkedin.com" }
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/company/imperial-valley-student-health-initiative"
+    }
   ],
   ctas: {
     homePrimary: {
